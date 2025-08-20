@@ -1,0 +1,40 @@
+<!-- store/templates/store/product_list.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Store</title>
+</head>
+<body>
+    <h1>Welcome to My Store</h1>
+
+    <!-- Search Bar -->
+    <form method="get" action="">
+        <input type="text" name="q" placeholder="Search products..." value="{{ request.GET.q }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <ul>
+        {% if products %}
+            {% for product in products %}
+                <li>
+                    <!-- Product Image -->
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" width="80" height="80">
+                    {% endif %}
+                    <!-- Product Detail Link -->
+                    <a href="{% url 'product_detail' product.id %}">{{ product.name }}</a>
+                    - ${{ product.price }}
+                    <!-- Add to Cart Button -->
+                    <form method="post" action="{% url 'add_to_cart' product.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li>No products found.</li>
+        {% endif %}
+    </ul>
+</body>
+</html>
